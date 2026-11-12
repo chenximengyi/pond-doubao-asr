@@ -1,0 +1,11 @@
+// Doubao dictation hotkeys for niri / Pond.
+// Paste this block INSIDE the existing "binds { ... }" section of
+// ~/.config/niri/cfg/keybinds.kdl (install.sh does this automatically),
+// then run: niri msg action load-config-file
+//
+// Replace /home/you/.local/bin/doubao-dictate with the real path.
+
+    // ─── Doubao dictation (managed by install.sh) ───
+    F9                           repeat=false hotkey-overlay-title="Doubao dictation (start/stop)" { spawn "/home/you/.local/bin/doubao-dictate" "toggle"; }
+    Mod+CTRL+X                   repeat=false hotkey-overlay-title="Doubao dictation (start/stop)" { spawn "/home/you/.local/bin/doubao-dictate" "toggle"; }
+    Mod+CTRL+ESCAPE              repeat=false hotkey-overlay-title="Doubao dictation (cancel)" { spawn "/home/you/.local/bin/doubao-dictate" "cancel"; }

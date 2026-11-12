@@ -1,0 +1,45 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+
+      # Native arch: the tests run on the runner, so GOOS/GOARCH stay host-side
+      # here. Cross-compiling the test binary would make it unrunnable.
+      - name: Vet and test
+        run: |
+          go vet ./...
+          go test ./...
+
+      - name: Cross-compile
+        run: |
+          set -eux
+          for arch in amd64 arm64; do
+            CGO_ENABLED=0 GOOS=linux GOARCH="$arch" \
+              go build -trimpath -ldflags="-s -w" \
+              -o "doubao-dictate-linux-$arch" .
+            sha256sum "doubao-dictate-linux-$arch" > "doubao-dictate-linux-$arch.sha256"
+          done
+
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            doubao-dictate-linux-amd64
+            doubao-dictate-linux-amd64.sha256
+            doubao-dictate-linux-arm64
+            doubao-dictate-linux-arm64.sha256

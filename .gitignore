@@ -1,0 +1,12 @@
+# build output
+/doubao-dictate
+/doubao-dictate-linux-*
+*.sha256
+
+# local config / secrets
+.env
+.env.local
+
+# editor & OS noise
+.DS_Store
+*.swp
